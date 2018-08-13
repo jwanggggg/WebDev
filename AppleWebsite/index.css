@@ -1,0 +1,66 @@
+/* CSS styling page for Apple */
+
+.container {
+  margin: 0 auto;
+  margin-top: 5%;
+  text-align: center;
+  width: 500px;
+  height: 500px;
+  font-family: "SF Pro Text","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-size: 20px;
+}
+
+h1, h2, h3, h4 {
+  line-height: .75;
+  font-weight: lighter;
+  color: #333;
+  font-style: normal;
+}
+
+h1 {
+  font-weight: 500;
+}
+
+img.icon {
+  position: relative;
+  top: 5px;
+  left:20px;
+}
+
+div.menu_item {
+  font-family: "SF Pro Text","SF Pro Icons","Helvetica Neue","Helvetica","Arial",sans-serif;
+  font-weight: lighter;
+  font-size: 14px;
+  color: white;
+  background: black;
+  display:inline-block;
+  width:9.7%;
+}
+
+div.menu {
+  margin: -1%;
+  background: black;
+  border:0.5em solid black;
+  padding:.2em;
+  width:98.8%;
+  display:inline-block;
+}
+
+a.links {
+  color:#2F6D96;
+  text-decoration: none;
+  font-weight: 300;
+}
+
+a.menu_item {
+  color:white;
+  text-decoration:none;
+}
+
+body {
+  background-color: #F2F2F2;
+  background-image: url("iPhone.png");
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center bottom;
+}

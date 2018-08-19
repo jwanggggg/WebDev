@@ -2,6 +2,7 @@
 // result of the first argument raised to the power of the second argument.
 // For example: if argument1 = 2 and argument2 = 8, the function should return 2^8.
 
+//{BRIAN}> I think you forgot to do this part^
 
 
 //---------------------------------------------------
@@ -13,6 +14,8 @@
 //   value, we should return a boolean, false.
 // * If all the values are numbers, return true.
 function numberArrayValidator(arr) {
+  //{BRIAN}> Good use for the "for...of" construct.
+  //{BRIAN}> You can also use the Array.forEach() construct to loop through values.
   for (let num of arr) {
     if (typeof num != 'number') {
       return false;
@@ -32,6 +35,8 @@ console.log(numberArrayValidator(arr));
 // name, "name".
 // If it does, return true. Otherwise, return false.
 
+//{BRIAN}> Good use of the "in" operator.
+//{BRIAN}> You can also use obj.name to check if the name property exists!
 function objectHasNameProp(obj) {
   if ("name" in obj) {
     return true;
@@ -54,6 +59,8 @@ console.log(objectHasNameProp(obj));
 // * and set its value to be your full name as a string.
 // * Return the object.
 
+//{BRIAN}> This question was a "Gotcha"/trick question
+//{BRIAN}> Try passing in an array and see what happens.
 function addNamePropToObject(arg) {
   if (typeof arg != 'object'){
     return null;
@@ -91,6 +98,14 @@ function printProperties(obj) {
 }
 printProperties(student);
 
+//{BRIAN}> Nice! A slightly more concise way of writing this might be the
+//{BRIAN}> for each construct:
+
+//{BRIAN}> Object.keys(obj).forEach((val) => { console.log(key); });
+//{BRIAN}> This is purely stylistic, though. The only reason you might
+//{BRIAN}> consider doing this is because you're reassigning a value to key
+//{BRIAN}> each time, which results in more computation than the forEach
+//{BRIAN}> construct.
 
 //---------------------------------------------------
 
@@ -196,6 +211,7 @@ weatherChecker("sunny");
 // Example:
 /*
 // Calling makeChristmasTree...
+
 makeChristmasTree(5);
 // Output:
     *
@@ -240,7 +256,6 @@ function makeChristmasTree(num) {
 
       let root = "";
       if (num == 1) {
-        console.log(star);
       } else {
         for (let i = 0; i < num - 1; i++) {
           let current = "";
@@ -263,3 +278,108 @@ function makeChristmasTree(num) {
 }
 
 makeChristmasTree(0);
+
+//{BRIAN}> This is a good attempt & I can see the logic behind your code!
+/* {BRIAN}>
+This is another solution, optimized for this question:
+
+We know that the maximum # of stars in any given tree where the height >= 2 is
+represented by the following relation:
+
+MaximumNumberOfStars = 2(height - 1) - 1
+
+Example:
+height = 5, MaximumNumberOfStars = 2(5 - 1) - 1 = 8 - 1 = 7.
+    *
+   ***
+  *****
+ ******* <-- 7 stars.
+    *
+
+height = 6, MaximumNumberOfStars = 2(6 - 1) - 1 = 10 - 1 = 9.
+    *
+   ***
+  *****
+ *******
+********* <-- 9 stars.
+    *
+
+If the height is one or zero, however, then we can simply print out one or zero
+stars, respectively.
+
+We want to maximize space (amount of memory required to store your tree) and 
+time efficiency for this question. How do we do this?
+
+Since we can calculate the maximum # of stars in a given tree where height >= 2,
+we can create an array that represents the stars at any given level and continuously
+add the result to a string! Here's what that looks like:
+*/
+
+function optimizedMakeTree(height) {
+  
+  // We have to first make sure that the height is at least 0:
+  if (height < 0) {
+    // Return an error object explaining what went wrong.
+    return Error("You must supply a height >= 0!");
+  }
+  // now let's check if the height is less than 2:
+  if (height < 2 && height >= 0) {
+    // We're going to return whatever is calculated below:
+    return '*'.repeat(height);
+    // This is because if height = 1, we just return 1 star; if height = 0, 
+    // we return 0 stars.
+  }
+  else {
+    // We defined a variable named "tree", representing our christmas tree.
+    // 'tree' is the string we'll return.
+    let tree = '';
+    
+    // If height is at least 2, we can use the formula we defined above to
+    // generate the Christmas tree.
+    let maximumNumberOfStars = (2 * (height - 1)) - 1;
+    // 'level' is an array to represent each level, initialized to the max # of 
+    // stars. For each level, we add the necessary # of stars. All other values 
+    // are spaces.
+    let level = Array.from(' '.repeat(maximumNumberOfStars));
+
+    // We're only going to loop for (height / 2) lowered to the nearest whole
+    // value + 1. Why is this? We're writing an optimized version of this code which
+    // means that we want to do as few loops and calculations as possible while
+    // keeping the number of variables we use to a minimum.
+    // We can think of generating the tree as not top-down or left to right,
+    // but middle-out (a Silicon Valley reference if you get it LOL). 
+    // See the example below for height = 4 ((4/2) + 1 = 3 loops total):
+    // Loop 1:    *
+    // Loop 2:   ***
+    // Loop 3:  *****
+    // And we add 1 star at the end.
+
+    let i; // "i" is our index counter.
+    let middle = Math.floor(height / 2) + 1;
+    // Here's the loop:
+    for (i = 0; i < height - 1; i++) {
+      level[middle - i] = "*";
+      level[middle + i] = "*";
+      tree += level.join("") + "\n";
+    }
+    // Reset the array (takes very little computational power).
+    level.fill(" ");
+    // Set the middle value to a star (the last star we have to add at the end).
+    level[middle] = "*";
+    tree += level.join("");
+    
+    return tree;
+  }
+}
+
+// You can test the speed of your code against mine!
+
+// Here's the benchmarks:
+
+console.time("Your Code");
+makeChristmasTree(5000);
+console.timeEnd("Your Code");
+
+console.time("Optimized Code");
+optimizedMakeTree(5000);
+console.timeEnd("Optimized Code");

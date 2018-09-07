@@ -256,6 +256,7 @@ function makeChristmasTree(num) {
 
       let root = "";
       if (num == 1) {
+        //console.log(star) <-- undefined??
       } else {
         for (let i = 0; i < num - 1; i++) {
           let current = "";
@@ -267,17 +268,17 @@ function makeChristmasTree(num) {
           for (let k = 0; k < (2 * i + 1); k++) {
             current += "*";
           }
-          console.log(current);
+          //console.log(current);
           if (i == 0) {
             root = current;
           }
         }
-        console.log(root);
+        //console.log(root); //{BRIAN} You should be returning root as well.
+        return root; //{BRIAN} <-- added this
       }
   }
 }
 
-makeChristmasTree(0);
 
 //{BRIAN}> This is a good attempt & I can see the logic behind your code!
 /* {BRIAN}>
@@ -314,36 +315,18 @@ Since we can calculate the maximum # of stars in a given tree where height >= 2,
 we can create an array that represents the stars at any given level and continuously
 add the result to a string! Here's what that looks like:
 */
-
 function optimizedMakeTree(height) {
-  
-  // We have to first make sure that the height is at least 0:
-  if (height < 0) {
-    // Return an error object explaining what went wrong.
-    return Error("You must supply a height >= 0!");
-  }
-  // now let's check if the height is less than 2:
-  if (height < 2 && height >= 0) {
-    // We're going to return whatever is calculated below:
-    return '*'.repeat(height);
-    // This is because if height = 1, we just return 1 star; if height = 0, 
-    // we return 0 stars.
-  }
-  else {
+  if (height >= 2) {
     // We defined a variable named "tree", representing our christmas tree.
     // 'tree' is the string we'll return.
     let tree = '';
-    
+
     // If height is at least 2, we can use the formula we defined above to
     // generate the Christmas tree.
     let maximumNumberOfStars = (2 * (height - 1)) - 1;
-    // 'level' is an array to represent each level, initialized to the max # of 
-    // stars. For each level, we add the necessary # of stars. All other values 
-    // are spaces.
-    let level = Array.from(' '.repeat(maximumNumberOfStars));
 
-    // We're only going to loop for (height / 2) lowered to the nearest whole
-    // value + 1. Why is this? We're writing an optimized version of this code which
+    // We're only going to loop for (height - 1).
+    // Why is this? We're writing an optimized version of this code which
     // means that we want to do as few loops and calculations as possible while
     // keeping the number of variables we use to a minimum.
     // We can think of generating the tree as not top-down or left to right,
@@ -354,21 +337,28 @@ function optimizedMakeTree(height) {
     // Loop 3:  *****
     // And we add 1 star at the end.
 
+    const loopEnd = height - 1;
     let i; // "i" is our index counter.
-    let middle = Math.floor(height / 2) + 1;
+
     // Here's the loop:
-    for (i = 0; i < height - 1; i++) {
-      level[middle - i] = "*";
-      level[middle + i] = "*";
-      tree += level.join("") + "\n";
+    for (i = 0; i < loopEnd; i++) {
+      tree += " ".repeat(height - i - 2) + "*".repeat((i * 2) + 1) + "\n";
     }
-    // Reset the array (takes very little computational power).
-    level.fill(" ");
-    // Set the middle value to a star (the last star we have to add at the end).
-    level[middle] = "*";
-    tree += level.join("");
-    
+
+    tree += " ".repeat(height - 2) + "*";
     return tree;
+  }
+  // We have to first make sure that the height is at least 0:
+  else if (height < 0) {
+    // Return an error object explaining what went wrong.
+    return Error("You must supply a height >= 0!");
+  }
+  // now let's check if the height is less than 2:
+  else {
+    // We're going to return whatever is calculated below:
+    return '*'.repeat(height);
+    // This is because if height = 1, we just return 1 star; if height = 0, 
+    // we return 0 stars.
   }
 }
 
@@ -376,10 +366,14 @@ function optimizedMakeTree(height) {
 
 // Here's the benchmarks:
 
-console.time("Your Code");
-makeChristmasTree(5000);
-console.timeEnd("Your Code");
+console.log("TEST\n\nCode correctly outputs expected tree: " +
+  `${optimizedMakeTree(5) === optimizedMakeTree(5)}!`);
+console.log("\n\n");
 
 console.time("Optimized Code");
-optimizedMakeTree(5000);
+optimizedMakeTree(10000);
 console.timeEnd("Optimized Code");
+
+console.time("Your Code");
+makeChristmasTree(10000);
+console.timeEnd("Your Code");
